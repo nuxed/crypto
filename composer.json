@@ -1,7 +1,7 @@
 {
     "name": "nuxed/crypto",
     "type": "library",
-    "description": "Nuxed Cryptography library",
+    "description": "Nuxed Crypto - High Level Cryptoghraphy interface built in top of libsodium",
     "license": "MIT",
     "authors": [
         {
@@ -22,8 +22,6 @@
         "hhvm/hacktest": "^1.6",
         "hhvm/hhast": "^4.25"
     },
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "scripts": {
         "check": [
             "@type-check",
