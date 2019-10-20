@@ -20,7 +20,7 @@ function xor(string $right, string $left): string {
   $left = vec<int>(disassemble($left));
   $right = vec<int>(disassemble($right));
   $result = vec[];
-  foreach ($left as $i => $c) {
+  foreach ($left as $i => $_c) {
     $result[] = $left[$i] ^ $right[$i];
   }
 
