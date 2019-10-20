@@ -36,6 +36,7 @@ use namespace Nuxed\Crypto;
 use namespace Nuxed\Crypto\Symmetric;
 use namespace HH\Lib\Experimental\File;
 
+<<__EntryPoint>>
 async function main(): void {
   // generate a key :
   $key = Symmetric\Encryption\Key::generate();
