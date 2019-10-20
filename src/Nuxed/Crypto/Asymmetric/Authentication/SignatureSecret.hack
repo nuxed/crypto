@@ -25,9 +25,12 @@ abstract class SignatureSecret extends Asymmetric\Secret {
     // Encryption keypair
     $kp = \sodium_crypto_sign_keypair();
     $private = \sodium_crypto_sign_secretkey($kp);
+    $public = \sodium_crypto_sign_publickey($kp);
 
     \sodium_memzero(inout $kp);
-    return new Secret\SignaturePrivateSecret(new Crypto\HiddenString($private))
-      |> tuple($$, $$->derivePublicSecret());
+    return tuple(
+      new Secret\SignaturePrivateSecret(new Crypto\HiddenString($private)),
+      new Secret\SignaturePublicSecret(new Crypto\HiddenString($public)),
+    );
   }
 }

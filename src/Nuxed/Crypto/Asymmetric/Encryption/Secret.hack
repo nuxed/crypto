@@ -37,9 +37,12 @@ abstract class Secret extends Asymmetric\Secret {
     // Encryption keypair
     $kp = \sodium_crypto_box_keypair();
     $private = \sodium_crypto_box_secretkey($kp);
+    $public = \sodium_crypto_box_publickey($kp);
 
     \sodium_memzero(inout $kp);
-    return new Secret\PrivateSecret(new Crypto\HiddenString($private))
-      |> tuple($$, $$->derivePublicSecret());
+    return tuple(
+      new Secret\PrivateSecret(new Crypto\HiddenString($private)),
+      new Secret\PublicSecret(new Crypto\HiddenString($public)),
+    );
   }
 }
