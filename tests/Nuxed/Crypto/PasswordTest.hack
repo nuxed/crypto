@@ -44,7 +44,7 @@ class PasswordTest extends HackTest\HackTest {
     $passwords = vec[];
     for ($i = 1; $i < 7; $i++) {
       $passwords[] = tuple(
-        new Crypto\HiddenString(SecureRandom\string($i * 32)),
+        new Crypto\HiddenString(SecureRandom\string($i * 6)),
       );
     }
     return $passwords;
