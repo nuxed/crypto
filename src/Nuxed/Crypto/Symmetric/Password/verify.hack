@@ -10,9 +10,8 @@ function verify(
   Crypto\HiddenString $password,
   string $stored,
   Encryption\Secret $secret,
-  string $additionalData = '',
 ): bool {
-  $stored = Encryption\decrypt($stored, $secret, $additionalData);
+  $stored = Encryption\decrypt($stored, $secret);
   return \sodium_crypto_pwhash_str_verify(
     $stored->toString(),
     $password->toString(),

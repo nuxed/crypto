@@ -11,12 +11,10 @@ function hash(
   Crypto\HiddenString $password,
   Encryption\Secret $secret,
   Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE,
-  string $additionalData = '',
 ): string {
   $hash = Password\hash($password, $level);
   return Encryption\encrypt(
     new Crypto\HiddenString($hash),
     $secret,
-    $additionalData,
   );
 }

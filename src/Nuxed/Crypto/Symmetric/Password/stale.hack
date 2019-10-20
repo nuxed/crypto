@@ -11,8 +11,7 @@ function stale(
   string $stored,
   Encryption\Secret $secret,
   Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE,
-  string $additionalData = '',
 ): bool {
-  $stored = Encryption\decrypt($stored, $secret, $additionalData);
+  $stored = Encryption\decrypt($stored, $secret);
   return Password\stale($stored->toString(), $level);
 }
