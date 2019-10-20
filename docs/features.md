@@ -163,6 +163,7 @@ Nuxed Crypto provides a simple, easy-to-use password hashing API built in top of
 Functions:
   
   - [`Crypto\Password\hash(Crypto\HiddenString $password, Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE): string;`](api/function.Nuxed.Crypto.Password.hash.md)
+    
     Hash the given password, and return hash string.
 
   - [`Crypto\Password\stale(string $stored, Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE): bool;`](api/function.Nuxed.Crypto.Password.stale.md)
