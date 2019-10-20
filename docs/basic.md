@@ -6,8 +6,6 @@ Unless stated otherwise, any time invalid data is encountered (an attacker tampe
 
 For authentication functions, typically `false` will be returned.
 
-## Password Hashing
-
 ## Encryption
 
 Encryption functions expect your message to be encapsulated in an instance of the `HiddenString` class. Decryption functions will return the decrypted plaintext in a `HiddenString` object.
@@ -109,8 +107,8 @@ use namespace Nuxed\Crypto\Asymmetric\Encryption;
 async function alice(): Awaitable<void> {
   // Generate a public + private signature secrets.
   list(
+    $alicePrivateSecret,
     $alicePublicSecret, 
-    $alicePrivateSecret
   ) = Encryption\Secret::generate();
 
   // hex-encode the public secret to send to bob.
@@ -196,7 +194,7 @@ use namespace Nuxed\Crypto\Asymmetric\Encryption;
 <<__EntryPoint>>
 async function main(): Awaitable<void>
 {
-  list($publicSecret, $privateSecret) = Encryption\Secret::generate();
+  list($privateSecret, $publicSecret) = Encryption\Secret::generate();
 }
 ```
 
@@ -297,7 +295,7 @@ use namespace Nuxed\Crypto\Asymmetric\Authentication;
 <<__EntryPoint>>
 async function main(): Awaitable<void>
 {
-  list($publicSecret, $privateSecret) = Authentication\SignatureSecret::generate();
+  list($privateSecret, $publicSecret) = Authentication\SignatureSecret::generate();
 }
 ```
 
