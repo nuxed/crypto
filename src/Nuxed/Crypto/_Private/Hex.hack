@@ -2,7 +2,7 @@ namespace Nuxed\Crypto\_Private;
 
 use namespace Nuxed\Crypto\{Binary, Exception};
 
-abstract class Hex {
+final abstract class Hex {
   /**
    * Convert a binary string into a hexadecimal string without cache-timing
    * leaks
