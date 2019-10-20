@@ -18,7 +18,7 @@ class AuthenticationTest extends HackTest\HackTest {
     >('asymmetric.authentication.public');
     $signature = Asymmetric\Authentication\sign('Hello, World!', $secret);
 
-    expect(Str\length($signature))->toBeSame(64);
+    expect(Crypto\Binary\length($signature))->toBeSame(\SODIUM_CRYPTO_SIGN_BYTES);
     expect(Crypto\Hex\encode($signature))
       ->toBeSame(
         'ded3736f32e6cbd625fc6ec12521194dfad0192556baba67bc151f78707d00369cda8c910531bcfc49ac24ade1797ecb9f88eb53e31738fd174d7b4ee7ac8e07',
@@ -106,6 +106,9 @@ class AuthenticationTest extends HackTest\HackTest {
       Asymmetric\Authentication\SignatureSecret::generate();
 
     $signature = Asymmetric\Authentication\sign($data, $secret);
+    expect(Crypto\Binary\length($signature))->toBeSame(
+      \SODIUM_CRYPTO_SIGN_BYTES,
+    );
     expect(Asymmetric\Authentication\verify($data, $publicSecret, $signature))
       ->toBeTrue();
   }
