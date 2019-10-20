@@ -19,7 +19,8 @@
     },
     "require-dev": {
         "facebook/fbexpect": "^2.6",
-        "hhvm/hacktest": "^1.6"
+        "hhvm/hacktest": "^1.6",
+        "hhvm/hhast": "^4.25"
     },
     "minimum-stability": "dev",
     "prefer-stable": true,
