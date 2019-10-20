@@ -13,6 +13,10 @@
 
 Nuxed Crypto a high-level cryptography interface that relies on libsodium for all of its underlying cryptography operations, inspired by [`Halite`](https://github.com/paragonie/halite).
 
+### Important
+
+Although this library has developed with care, it has not been examined by security experts, there will always be a chance that we overlooked something. Please ask your favorite trusted hackers to hammer it for implementation errors and bugs before even thinking about deploying it in production.
+
 ### Installation
 
 This package can be installed with [Composer](https://getcomposer.org).
