@@ -1,7 +1,5 @@
 namespace Nuxed\Crypto\Symmetric\Password;
 
-use namespace Nuxed\Crypto;
-use namespace Nuxed\Crypto\Password;
 use namespace Nuxed\Crypto\Symmetric\Encryption;
 
 /**
