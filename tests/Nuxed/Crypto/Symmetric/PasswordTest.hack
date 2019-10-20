@@ -39,12 +39,16 @@ class PasswordTest extends HackTest\HackTest {
       ->toBeTrue();
     expect(Symmetric\Password\verify($password, $sensitive, $secret))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $interactive, $otherSecret))
-      ->toBeFalse();
-    expect(Symmetric\Password\verify($password, $moderate, $otherSecret))
-      ->toBeFalse();
-    expect(Symmetric\Password\verify($password, $sensitive, $otherSecret))
-      ->toBeFalse();
+    expect(
+      () ==> Symmetric\Password\verify($password, $interactive, $otherSecret),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(() ==> Symmetric\Password\verify($password, $moderate, $otherSecret))
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(
+      () ==> Symmetric\Password\verify($password, $sensitive, $otherSecret),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
 
     $newInteractive = Symmetric\Password\rotate(
       $interactive,
@@ -58,12 +62,14 @@ class PasswordTest extends HackTest\HackTest {
       $otherSecret,
     );
 
-    expect(Symmetric\Password\verify($password, $newInteractive, $secret))
-      ->toBeFalse();
-    expect(Symmetric\Password\verify($password, $newModerate, $secret))
-      ->toBeFalse();
-    expect(Symmetric\Password\verify($password, $newSensitive, $secret))
-      ->toBeFalse();
+    expect(
+      () ==> Symmetric\Password\verify($password, $newInteractive, $secret),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(() ==> Symmetric\Password\verify($password, $newModerate, $secret))
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(() ==> Symmetric\Password\verify($password, $newSensitive, $secret))
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\verify($password, $newInteractive, $otherSecret))
       ->toBeTrue();
     expect(Symmetric\Password\verify($password, $newModerate, $otherSecret))
@@ -99,104 +105,109 @@ class PasswordTest extends HackTest\HackTest {
       ->toBeTrue();
     expect(Symmetric\Password\verify($password, $sensitive, $secret))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $interactive, $otherSecret))
-      ->toBeFalse();
-    expect(Symmetric\Password\verify($password, $moderate, $otherSecret))
-      ->toBeFalse();
-    expect(Symmetric\Password\verify($password, $sensitive, $otherSecret))
-      ->toBeFalse();
-
     expect(
-      Symmetric\Password\stale(
+      () ==> Symmetric\Password\verify($password, $interactive, $otherSecret),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(() ==> Symmetric\Password\verify($password, $moderate, $otherSecret))
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(
+      () ==> Symmetric\Password\verify($password, $sensitive, $otherSecret),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+
+    expect(Symmetric\Password\stale(
+      $interactive,
+      $secret,
+      Crypto\SecurityLevel::INTERACTIVE,
+    ))->toBeFalse();
+    expect(Symmetric\Password\stale(
+      $interactive,
+      $secret,
+      Crypto\SecurityLevel::MODERATE,
+    ))->toBeTrue();
+    expect(Symmetric\Password\stale(
+      $interactive,
+      $secret,
+      Crypto\SecurityLevel::SENSITIVE,
+    ))->toBeTrue();
+    expect(
+      () ==> Symmetric\Password\stale(
         $interactive,
-        $secret,
+        $otherSecret,
+        Crypto\SecurityLevel::MODERATE,
+      ),
+    )->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(
+      () ==> Symmetric\Password\stale(
+        $interactive,
+        $otherSecret,
+        Crypto\SecurityLevel::SENSITIVE,
+      ),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(Symmetric\Password\stale(
+      $moderate,
+      $secret,
+      Crypto\SecurityLevel::INTERACTIVE,
+    ))->toBeTrue();
+    expect(
+      () ==> Symmetric\Password\stale(
+        $moderate,
+        $otherSecret,
         Crypto\SecurityLevel::INTERACTIVE,
       ),
-    )->toBeFalse();
-    expect(Symmetric\Password\stale(
-      $interactive,
-      $secret,
-      Crypto\SecurityLevel::MODERATE,
-    ))
-      ->toBeTrue();
-    expect(Symmetric\Password\stale(
-      $interactive,
-      $secret,
-      Crypto\SecurityLevel::SENSITIVE,
-    ))
-      ->toBeTrue();
-    expect(Symmetric\Password\stale(
-      $interactive,
-      $otherSecret,
-      Crypto\SecurityLevel::MODERATE,
-    ))
-      ->toBeFalse();
-    expect(Symmetric\Password\stale(
-      $interactive,
-      $otherSecret,
-      Crypto\SecurityLevel::SENSITIVE,
-    ))
-      ->toBeFalse();
-    expect(Symmetric\Password\stale(
-      $moderate,
-      $secret,
-      Crypto\SecurityLevel::INTERACTIVE,
-    ))
-      ->toBeTrue();
-    expect(Symmetric\Password\stale(
-      $moderate,
-      $otherSecret,
-      Crypto\SecurityLevel::INTERACTIVE,
-    ))
-      ->toBeFalse();
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\stale(
       $moderate,
       $secret,
       Crypto\SecurityLevel::MODERATE,
-    ))
-      ->toBeFalse();
+    ))->toBeFalse();
     expect(Symmetric\Password\stale(
       $moderate,
       $secret,
       Crypto\SecurityLevel::SENSITIVE,
-    ))
-      ->toBeTrue();
-    expect(Symmetric\Password\stale(
-      $moderate,
-      $otherSecret,
-      Crypto\SecurityLevel::SENSITIVE,
-    ))
-      ->toBeFalse();
+    ))->toBeTrue();
+    expect(
+      () ==> Symmetric\Password\stale(
+        $moderate,
+        $otherSecret,
+        Crypto\SecurityLevel::SENSITIVE,
+      ),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\stale(
       $sensitive,
       $secret,
       Crypto\SecurityLevel::INTERACTIVE,
-    ))
-      ->toBeTrue();
+    ))->toBeTrue();
     expect(Symmetric\Password\stale(
       $sensitive,
       $secret,
       Crypto\SecurityLevel::MODERATE,
-    ))
-      ->toBeTrue();
-    expect(Symmetric\Password\stale(
-      $sensitive,
-      $otherSecret,
-      Crypto\SecurityLevel::INTERACTIVE,
-    ))
-      ->toBeFalse();
-    expect(Symmetric\Password\stale(
-      $sensitive,
-      $otherSecret,
-      Crypto\SecurityLevel::MODERATE,
-    ))
-      ->toBeFalse();
+    ))->toBeTrue();
+    expect(
+      () ==> Symmetric\Password\stale(
+        $sensitive,
+        $otherSecret,
+        Crypto\SecurityLevel::INTERACTIVE,
+      ),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
+    expect(
+      () ==> Symmetric\Password\stale(
+        $sensitive,
+        $otherSecret,
+        Crypto\SecurityLevel::MODERATE,
+      ),
+    )
+      ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\stale(
       $sensitive,
       $secret,
       Crypto\SecurityLevel::SENSITIVE,
-    ))
-      ->toBeFalse();
+    ))->toBeFalse();
   }
 
   public function provideRandomPasswords(): Container<(Crypto\HiddenString)> {
