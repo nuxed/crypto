@@ -7,7 +7,7 @@ use namespace Nuxed\Crypto\{Binary, Exception};
  */
 function verify(
   string $message,
-  Secret\SignaturePublicSecret $secret,
+  Key\SignaturePublicKey $key,
   string $signature,
 ): bool {
   if (Binary\length($signature) !== \SODIUM_CRYPTO_SIGN_BYTES) {
@@ -19,6 +19,6 @@ function verify(
   return (bool)\sodium_crypto_sign_verify_detached(
     $signature,
     $message,
-    $secret->toString(),
+    $key->toString(),
   );
 }

@@ -9,12 +9,9 @@ use namespace Nuxed\Crypto\Symmetric\Encryption;
  */
 function hash(
   Crypto\HiddenString $password,
-  Encryption\Secret $secret,
+  Encryption\Key $key,
   Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE,
 ): string {
   $hash = Password\hash($password, $level);
-  return Encryption\encrypt(
-    new Crypto\HiddenString($hash),
-    $secret,
-  );
+  return Encryption\encrypt(new Crypto\HiddenString($hash), $key);
 }

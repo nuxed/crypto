@@ -2,7 +2,7 @@
 
 ## Error Handling
 
-Unless stated otherwise, any time invalid data is encountered (an attacker tampered with the ciphertext, you have the wrong decryption secret, etc.), an Exception will be thrown. If you catch one, you should log the incident and fail closed (i.e. terminate the script gracefully) rather than proceeding as if nothing happened.
+Unless stated otherwise, any time invalid data is encountered (an attacker tampered with the ciphertext, you have the wrong decryption key, etc.), an Exception will be thrown. If you catch one, you should log the incident and fail closed (i.e. terminate the script gracefully) rather than proceeding as if nothing happened.
 
 For authentication functions, typically `false` will be returned.
 
@@ -12,18 +12,18 @@ Encryption functions expect your message to be encapsulated in an instance of th
 
 ## Symmetric Encryption
 
-First, you'll need is an encryption secret. The easiest way to obtain one is to generate it:
+First, you'll need is an encryption key. The easiest way to obtain one is to generate it:
 
 ```hack
 use namespace Nuxed\Crypto\Symmetric;
 
 <<__EntryPoint>>
 async function main(): Awaitable<void> {
-  $secret = Symmetric\Encryption\Secret::generate();
+  $key = Symmetric\Encryption\Key::generate();
 }
 ```
 
-This generates a strong random secret. If you'd like to reuse it, you can simply export it into a file.
+This generates a strong random key. If you'd like to reuse it, you can simply export it into a file.
 
 ```hack
 use namespace Nuxed\Crypto\Symmetric;
@@ -31,10 +31,10 @@ use namespace HH\Lib\Experimental\File;
 
 <<__EntryPoint>>
 async function main(): Awaitable<void> {
-  $secret = Symmetric\Encryption\Secret::generate();
+  $key = Symmetric\Encryption\Key::generate();
   
   await using ($file = File\open_write_only('/path/to/encryption.key')) {
-    await $file->writeAsync($secret->export()->toString());
+    await $file->writeAsync($key->export()->toString());
   }
 }
 ```
@@ -49,7 +49,7 @@ use namespace HH\Lib\Experimental\File;
 <<__EntryPoint>>
 async function main(): Awaitable<void> {
   await using ($file = File\open_read_only('/path/to/encryption.key')) {
-    $secret = Symmetric\Encryption\Secret::import(
+    $key = Symmetric\Encryption\Key::import(
       new Crypto\HiddenString(
         await $file->readAsync();
       )
@@ -68,10 +68,10 @@ use namespace Nuxed\Crypto\Symmetric;
 
 <<__EntryPoint>>
 async function main(): Awaitable<void> {
-  $secret = Symmetric\Encryption\Secret::generate();
+  $key = Symmetric\Encryption\Key::generate();
 
   $plaintext = new Crypto\HiddenString('Hello, World!');
-  $ciphertext = Symmetric\Encryption\encrypt($plaintext, $secret);
+  $ciphertext = Symmetric\Encryption\encrypt($plaintext, $key);
 }
 ```
 
@@ -83,11 +83,11 @@ use namespace Nuxed\Crypto\Symmetric;
 
 <<__EntryPoint>>
 async function main(): Awaitable<void> {
-  $secret = Symmetric\Encryption\Secret::generate();
+  $key = Symmetric\Encryption\Key::generate();
 
   $plaintext = new Crypto\HiddenString('Hello, World!');
-  $ciphertext = Symmetric\Encryption\encrypt($plaintext, $secret);
-  $message = Symmetric\Encryption\decrypt($ciphertext, $secret);
+  $ciphertext = Symmetric\Encryption\encrypt($plaintext, $key);
+  $message = Symmetric\Encryption\decrypt($ciphertext, $key);
 
   echo $message->toString(); // Hello, World!
 }
@@ -95,9 +95,9 @@ async function main(): Awaitable<void> {
 
 ## Authenticated Asymmetric Encryption (Encrypting)
 
-This API facilitates message encryption between to participants in a conversation. It requires your private secret and your partner's public secret.
+This API facilitates message encryption between to participants in a conversation. It requires your private key and your partner's public key.
 
-Assuming you are Alice, you would generate your secret-pair like so. (The other person, Bob, will do the same on his end.)
+Assuming you are Alice, you would generate your key-pair like so. (The other person, Bob, will do the same on his end.)
 
 ```hack
 use namespace Nuxed\Crypto\Hex;
@@ -105,18 +105,18 @@ use namespace Nuxed\Crypto\Asymmetric\Encryption;
 
 <<__EntryPoint>>
 async function alice(): Awaitable<void> {
-  // Generate a public + private signature secrets.
+  // Generate a public + private signature keys.
   list(
-    $alicePrivateSecret,
-    $alicePublicSecret, 
-  ) = Encryption\Secret::generate();
+    $alicePrivateKey,
+    $alicePublicKey, 
+  ) = Encryption\Key::generate();
 
-  // hex-encode the public secret to send to bob.
-  $sendToBob = Hex\encode($alicePublicSecret->toString());
+  // hex-encode the public key to send to bob.
+  $sendToBob = Hex\encode($alicePublicKey->toString());
 }
 ```
 
-Alice will then load Bob's public secret into the appropriate object like so:
+Alice will then load Bob's public key into the appropriate object like so:
 
 ```hack
 use namespace Nuxed\Crypto;
@@ -127,10 +127,10 @@ use namespace Nuxed\Crypto\Asymmetric\Encryption;
 async function alice(): Awaitable<void> {
   ...
 
-  // retrieve bob's public secret ( assuming its hex encoded )
+  // retrieve bob's public key ( assuming its hex encoded )
   $recievedFromBob = ...;
-  // load bob's public secret into the appropriate object
-  $bobPublicSecret = Encryption\Secret::public(
+  // load bob's public key into the appropriate object
+  $bobPublicKey = Encryption\Key::public(
     new Crypto\HiddenString(
       Hex\decode($recievedFromBob)
     )
@@ -155,8 +155,8 @@ async function alice(): Awaitable<void> {
   // encrypt the message to send to bob.
   $ciphertext = Hex\encode(Encryption\encrypt(
     $message,
-    $alicePrivateSecret,
-    $bobPublicSecret
+    $alicePrivateKey,
+    $bobPublicKey
   ));
 }
 ```
@@ -176,17 +176,17 @@ async function alice(): Awaitable<void> {
   $ciphertextFromBob = ...;
   $message = Encrpyiton\decrypt(
     Hex\decode($ciphertextFromBob),
-    $alicePrivateSecret,
-    $bobPublicSecret
+    $alicePrivateKey,
+    $bobPublicKey
   );
 }
 ```
 
 ## Anonymous Asymmetric Encryption (Sealing)
 
-A sealing interface is one where you encrypt a message with a public secret, such that only the person corresponding private secret can decrypt it.
+A sealing interface is one where you encrypt a message with a public key, such that only the person corresponding private key can decrypt it.
 
-If you wish to seal information, you only need one secret-pair rather than two.
+If you wish to seal information, you only need one key-pair rather than two.
 
 ```hack
 use namespace Nuxed\Crypto\Asymmetric\Encryption;
@@ -194,11 +194,11 @@ use namespace Nuxed\Crypto\Asymmetric\Encryption;
 <<__EntryPoint>>
 async function main(): Awaitable<void>
 {
-  list($privateSecret, $publicSecret) = Encryption\Secret::generate();
+  list($privateKey, $publicKey) = Encryption\Key::generate();
 }
 ```
 
-Note: you want to only keep `$publicSecret` stored outside of the trusted environment.
+Note: you want to only keep `$publicKey` stored outside of the trusted environment.
 
 ---
 
@@ -214,7 +214,7 @@ async function main(): Awaitable<void>
   ...
 
   $message = new Crypto\HiddenString('Hello, World!');
-  $sealed = Encryption\seal($message, $publicSecret);
+  $sealed = Encryption\seal($message, $publicKey);
 }
 ```
 
@@ -229,7 +229,7 @@ async function main(): Awaitable<void>
 {
   ...
 
-  $opened = Encryption\unseal($sealed, $privateSecret);
+  $opened = Encryption\unseal($sealed, $privateKey);
 }
 ```
 
@@ -239,7 +239,7 @@ async function main(): Awaitable<void>
 
 Symmetric authentication is useful if you'd like to authenticate, but not encrypt, some information that you transfer over a network or share with your end users.
 
-First, you will need an appropriate secret. The easiest way to get one is to simply generate one randomly then store it for reuse (similar to private-secret encryption above):
+First, you will need an appropriate key. The easiest way to get one is to simply generate one randomly then store it for reuse (similar to private-secret encryption above):
 
 ```hack
 use namespace Nuxed\Crypto\Symmetric\Authentication;
@@ -247,7 +247,7 @@ use namespace Nuxed\Crypto\Symmetric\Authentication;
 <<__EntryPoint>>
 async function main(): Awaitable<void>
 {
-  $secret = Authentication\Secret::generate();
+  $key = Authentication\Key::generate();
 }
 ```
 
@@ -264,7 +264,7 @@ async function main(): Awaitable<void>
   ...
 
   // MAC stands for Message Authentication Code
-  $mac = Authentication\authenticate('Hello, World!', $secret);
+  $mac = Authentication\authenticate('Hello, World!', $key);
 }
 ```
 
@@ -278,7 +278,7 @@ async function main(): Awaitable<void>
 {
   ...
 
-  $valid = Authentication\verify('Hello, World!', $mac, $secret);
+  $valid = Authentication\verify('Hello, World!', $mac, $key);
   if ($valid) {
     // Success!
   }
@@ -287,7 +287,7 @@ async function main(): Awaitable<void>
 
 ### Asymmetric Authentication (Digital Signatures)
 
-As with anonymous asymmetric encryption, you only need one secret-pair and you only give out your public secret.
+As with anonymous asymmetric encryption, you only need one key-pair and you only give out your public key.
 
 ```
 use namespace Nuxed\Crypto\Asymmetric\Authentication;
@@ -295,13 +295,13 @@ use namespace Nuxed\Crypto\Asymmetric\Authentication;
 <<__EntryPoint>>
 async function main(): Awaitable<void>
 {
-  list($privateSecret, $publicSecret) = Authentication\SignatureSecret::generate();
+  list($privateKey, $publicKey) = Authentication\SignatureKey::generate();
 }
 ```
 
 ---
 
-*Signing* a message with a secret key:
+*Signing* a message with a key key:
 
 ```
 use namespace Nuxed\Crypto\Asymmetric\Authentication;
@@ -312,7 +312,7 @@ async function main(): Awaitable<void>
   ...
 
   $message = 'Hello, World';
-  $signature = Authentication\sign($message, $privateSecret);
+  $signature = Authentication\sign($message, $privateKey);
 }
 ```
 
@@ -327,7 +327,7 @@ async function main(): Awaitable<void>
   ...
 
   $message = 'Hello, World';
-  $valid = Authentication\verify($message, $signature, $publicSecret);
+  $valid = Authentication\verify($message, $signature, $publicKey);
   if ($valid) {
     // Success!
   }

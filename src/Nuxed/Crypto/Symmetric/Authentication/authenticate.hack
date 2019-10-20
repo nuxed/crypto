@@ -1,9 +1,9 @@
 namespace Nuxed\Crypto\Symmetric\Authentication;
 
-function authenticate(string $message, SignatureSecret $secret): string {
+function authenticate(string $message, SignatureKey $key): string {
   return \sodium_crypto_generichash(
     $message,
-    $secret->toString(),
+    $key->toString(),
     \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX,
   );
 }

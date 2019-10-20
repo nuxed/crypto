@@ -10,17 +10,17 @@ use function Facebook\FBExpect\expect;
 
 class EncryptionTest extends HackTest\HackTest {
   public async function testEncryptAndDecrypt(): Awaitable<void> {
-    $aliceEncryptionPrivateSecret = await $this->import<
-      Asymmetric\Encryption\Secret\PrivateSecret,
+    $aliceEncryptionPrivateKey = await $this->import<
+      Asymmetric\Encryption\Key\PrivateKey,
     >('asymmetric.encryption.private');
-    $aliceEncryptionPublicSecret = await $this->import<
-      Asymmetric\Encryption\Secret\PublicSecret,
+    $aliceEncryptionPublicKey = await $this->import<
+      Asymmetric\Encryption\Key\PublicKey,
     >('asymmetric.encryption.public');
-    $bobEncryptionPrivateSecret = await $this->import<
-      Asymmetric\Encryption\Secret\PrivateSecret,
+    $bobEncryptionPrivateKey = await $this->import<
+      Asymmetric\Encryption\Key\PrivateKey,
     >('bob.asymmetric.encryption.private');
-    $bobEncryptionPublicSecret = await $this->import<
-      Asymmetric\Encryption\Secret\PublicSecret,
+    $bobEncryptionPublicKey = await $this->import<
+      Asymmetric\Encryption\Key\PublicKey,
     >('bob.asymmetric.encryption.public');
 
 
@@ -28,15 +28,15 @@ class EncryptionTest extends HackTest\HackTest {
     $message = new Crypto\HiddenString('Hello Bob');
     $toBob = Asymmetric\Encryption\encrypt(
       $message,
-      $aliceEncryptionPrivateSecret,
-      $bobEncryptionPublicSecret,
+      $aliceEncryptionPrivateKey,
+      $bobEncryptionPublicKey,
     );
 
     // Actor : bob
     $fromAlice = Asymmetric\Encryption\decrypt(
       $toBob,
-      $bobEncryptionPrivateSecret,
-      $aliceEncryptionPublicSecret,
+      $bobEncryptionPrivateKey,
+      $aliceEncryptionPublicKey,
     );
 
     expect($fromAlice->toString())->toBeSame('Hello Bob');
@@ -44,15 +44,15 @@ class EncryptionTest extends HackTest\HackTest {
     $message = new Crypto\HiddenString('Hey Alice');
     $toAlice = Asymmetric\Encryption\encrypt(
       $message,
-      $bobEncryptionPrivateSecret,
-      $aliceEncryptionPublicSecret,
+      $bobEncryptionPrivateKey,
+      $aliceEncryptionPublicKey,
     );
 
     // Actor : alice
     $fromBob = Asymmetric\Encryption\decrypt(
       $toAlice,
-      $aliceEncryptionPrivateSecret,
-      $bobEncryptionPublicSecret,
+      $aliceEncryptionPrivateKey,
+      $bobEncryptionPublicKey,
     );
 
     expect($fromBob->toString())->toBeSame('Hey Alice');
@@ -60,24 +60,24 @@ class EncryptionTest extends HackTest\HackTest {
 
   // Anonymous Encryption
   public async function testSealAndUnseal(): Awaitable<void> {
-    $aliceEncryptionPrivateSecret = await $this->import<
-      Asymmetric\Encryption\Secret\PrivateSecret,
+    $aliceEncryptionPrivateKey = await $this->import<
+      Asymmetric\Encryption\Key\PrivateKey,
     >('asymmetric.encryption.private');
-    $aliceEncryptionPublicSecret = await $this->import<
-      Asymmetric\Encryption\Secret\PublicSecret,
+    $aliceEncryptionPublicKey = await $this->import<
+      Asymmetric\Encryption\Key\PublicKey,
     >('asymmetric.encryption.public');
 
     // Actor : anonymous
     $message = new Crypto\HiddenString('Hello Alice');
     $encrypted = Asymmetric\Encryption\seal(
       $message,
-      $aliceEncryptionPublicSecret,
+      $aliceEncryptionPublicKey,
     );
 
     // Actor : alice
     $recieved = Asymmetric\Encryption\unseal(
       $encrypted,
-      $aliceEncryptionPrivateSecret,
+      $aliceEncryptionPrivateKey,
     );
 
     expect($recieved->toString())->toBeSame('Hello Alice');
@@ -87,24 +87,24 @@ class EncryptionTest extends HackTest\HackTest {
   public async function testEncryptAndDecryptRandom(
     string $data,
   ): Awaitable<void> {
-    list($aliceEncryptionPrivateSecret, $aliceEncryptionPublicSecret) =
-      Asymmetric\Encryption\Secret::generate();
-    list($bobEncryptionPrivateSecret, $bobEncryptionPublicSecret) =
-      Asymmetric\Encryption\Secret::generate();
+    list($aliceEncryptionPrivateKey, $aliceEncryptionPublicKey) =
+      Asymmetric\Encryption\Key::generate();
+    list($bobEncryptionPrivateKey, $bobEncryptionPublicKey) =
+      Asymmetric\Encryption\Key::generate();
 
     // Actor : alice
     $message = new Crypto\HiddenString($data);
     $toBob = Asymmetric\Encryption\encrypt(
       $message,
-      $aliceEncryptionPrivateSecret,
-      $bobEncryptionPublicSecret,
+      $aliceEncryptionPrivateKey,
+      $bobEncryptionPublicKey,
     );
 
     // Actor : bob
     $fromAlice = Asymmetric\Encryption\decrypt(
       $toBob,
-      $bobEncryptionPrivateSecret,
-      $aliceEncryptionPublicSecret,
+      $bobEncryptionPrivateKey,
+      $aliceEncryptionPublicKey,
     );
 
     expect($fromAlice->toString())->toBeSame($data);
@@ -112,15 +112,15 @@ class EncryptionTest extends HackTest\HackTest {
     $message = new Crypto\HiddenString(Str\reverse($data));
     $toAlice = Asymmetric\Encryption\encrypt(
       $message,
-      $bobEncryptionPrivateSecret,
-      $aliceEncryptionPublicSecret,
+      $bobEncryptionPrivateKey,
+      $aliceEncryptionPublicKey,
     );
 
     // Actor : alice
     $fromBob = Asymmetric\Encryption\decrypt(
       $toAlice,
-      $aliceEncryptionPrivateSecret,
-      $bobEncryptionPublicSecret,
+      $aliceEncryptionPrivateKey,
+      $bobEncryptionPublicKey,
     );
 
     expect($fromBob->toString())->toBeSame(Str\reverse($data));
@@ -128,20 +128,20 @@ class EncryptionTest extends HackTest\HackTest {
 
   <<HackTest\DataProvider('provideRandomStrings')>>
   public async function testSealAndUnsealRandom(string $data): Awaitable<void> {
-    list($aliceEncryptionPrivateSecret, $aliceEncryptionPublicSecret) =
-      Asymmetric\Encryption\Secret::generate();
+    list($aliceEncryptionPrivateKey, $aliceEncryptionPublicKey) =
+      Asymmetric\Encryption\Key::generate();
 
     // Actor : anonymous
     $message = new Crypto\HiddenString($data);
     $encrypted = Asymmetric\Encryption\seal(
       $message,
-      $aliceEncryptionPublicSecret,
+      $aliceEncryptionPublicKey,
     );
 
     // Actor : alice
     $recieved = Asymmetric\Encryption\unseal(
       $encrypted,
-      $aliceEncryptionPrivateSecret,
+      $aliceEncryptionPrivateKey,
     );
 
     expect($recieved->toString())->toBeSame($data);
@@ -156,11 +156,11 @@ class EncryptionTest extends HackTest\HackTest {
     return $ret;
   }
 
-  private async function import<reify T as Asymmetric\Secret>(
+  private async function import<reify T as Asymmetric\Key>(
     string $name,
   ): Awaitable<T> {
     await using (
-      $file = File\open_read_only(__DIR__.'/../../../secrets/'.$name.'.key')
+      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
     ) {
       return T::import(new Crypto\HiddenString(await $file->readAsync()));
     }

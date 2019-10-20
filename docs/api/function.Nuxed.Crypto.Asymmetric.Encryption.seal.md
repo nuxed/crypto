@@ -13,7 +13,7 @@ namespace Nuxed\Crypto\Asymmetric\Encryption;
 
 function seal(
   \Nuxed\Crypto\HiddenString $plaintext,
-  Secret\PublicSecret $secret,
+  Key\PublicKey $key,
 ): string;
 ```
 
@@ -26,7 +26,7 @@ function seal(
 
 
 + [` \Nuxed\Crypto\HiddenString `](<class.Nuxed.Crypto.HiddenString.md>)`` $plaintext ``
-+ ` Secret\PublicSecret $secret `
++ ` Key\PublicKey $key `
 
 
 

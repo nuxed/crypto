@@ -14,8 +14,8 @@ namespace Nuxed\Crypto\Asymmetric\Encryption;
 
 function decrypt(
   string $ciphertext,
-  Secret\PrivateSecret $privateSecret,
-  Secret\PublicSecret $publicSecret,
+  Key\PrivateKey $privateKey,
+  Key\PublicKey $publicKey,
   string $additionalData = '',
 ): \Nuxed\Crypto\HiddenString;
 ```
@@ -29,8 +29,8 @@ function decrypt(
 
 
 + ` string $ciphertext `
-+ ` Secret\PrivateSecret $privateSecret `
-+ ` Secret\PublicSecret $publicSecret `
++ ` Key\PrivateKey $privateKey `
++ ` Key\PublicKey $publicKey `
 + ` string $additionalData = '' `
 
 

@@ -9,7 +9,7 @@ use namespace Nuxed\Crypto\Symmetric\Authentication;
  */
 function decrypt(
   string $ciphertext,
-  Secret $secretKey,
+  Key $key,
   string $additionalData = '',
 ): Crypto\HiddenString {
   $pieces = unpack($ciphertext);
@@ -22,12 +22,12 @@ function decrypt(
   // likely cross-protocol attacks.
   // This uses salted HKDF to split the keys, which is why we need the
   // salt in the first place. */
-  list($encKey, $authKey) = Secret\split($secretKey, $salt);
+  list($encKey, $authKey) = Key\split($key, $salt);
   // Check the MAC first
   if (
     !Authentication\verify(
       $salt.$nonce.$additionalData.$encrypted,
-      new Authentication\SignatureSecret(new Crypto\HiddenString($authKey)),
+      new Authentication\SignatureKey(new Crypto\HiddenString($authKey)),
       $auth,
     )
   ) {

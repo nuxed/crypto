@@ -9,15 +9,13 @@ use namespace Nuxed\Crypto\Symmetric;
  */
 function decrypt(
   string $ciphertext,
-  Secret\PrivateSecret $privateSecret,
-  Secret\PublicSecret $publicSecret,
+  Key\PrivateKey $privateKey,
+  Key\PublicKey $publicKey,
   string $additionalData = '',
 ): Crypto\HiddenString {
   return Symmetric\Encryption\decrypt(
     $ciphertext,
-    new Symmetric\Encryption\Secret(
-      Secret::shared($privateSecret, $publicSecret),
-    ),
+    new Symmetric\Encryption\Key(Key::shared($privateKey, $publicKey)),
     $additionalData,
   );
 }

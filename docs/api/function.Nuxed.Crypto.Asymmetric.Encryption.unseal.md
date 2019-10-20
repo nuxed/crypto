@@ -13,7 +13,7 @@ namespace Nuxed\Crypto\Asymmetric\Encryption;
 
 function unseal(
   string $ciphertext,
-  Secret\PrivateSecret $secret,
+  Key\PrivateKey $key,
 ): \Nuxed\Crypto\HiddenString;
 ```
 
@@ -26,7 +26,7 @@ function unseal(
 
 
 + ` string $ciphertext `
-+ ` Secret\PrivateSecret $secret `
++ ` Key\PrivateKey $key `
 
 
 

@@ -5,12 +5,12 @@ use namespace Nuxed\Crypto\Asymmetric\Encryption;
 
 function lock(
   Crypto\HiddenString $message,
-  Secret\SignaturePrivateSecret $secret,
-  Encryption\Secret\PublicSecret $recipientPublicKey,
+  Key\SignaturePrivateKey $key,
+  Encryption\Key\PublicKey $recipientPublicKey,
 ): string {
-  $signature = sign($message->toString(), $secret);
+  $signature = sign($message->toString(), $key);
   $plaintext = new Crypto\HiddenString($signature.$message->toString());
   \sodium_memzero(inout $signature);
-  $myEncKey = $secret->toEncryptionSecret();
+  $myEncKey = $key->toEncryptionKey();
   return Encryption\encrypt($plaintext, $myEncKey, $recipientPublicKey);
 }

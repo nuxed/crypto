@@ -10,187 +10,187 @@ use function Facebook\FBExpect\expect;
 
 class PasswordTest extends HackTest\HackTest {
   public async function testKeyRotation(): Awaitable<void> {
-    $secret = await $this->import<Symmetric\Encryption\Secret>(
+    $key = await $this->import<Symmetric\Encryption\Key>(
       'symmetric.encryption',
     );
-    $otherSecret = Symmetric\Encryption\Secret::generate();
+    $otherKey = Symmetric\Encryption\Key::generate();
 
     $password = new Crypto\HiddenString('MYR3!!Y$tr0NGP4$sW0Rd');
 
     $interactive = Symmetric\Password\hash(
       $password,
-      $secret,
+      $key,
       Crypto\SecurityLevel::INTERACTIVE,
     );
     $moderate = Symmetric\Password\hash(
       $password,
-      $secret,
+      $key,
       Crypto\SecurityLevel::MODERATE,
     );
     $sensitive = Symmetric\Password\hash(
       $password,
-      $secret,
+      $key,
       Crypto\SecurityLevel::SENSITIVE,
     );
 
-    expect(Symmetric\Password\verify($password, $interactive, $secret))
+    expect(Symmetric\Password\verify($password, $interactive, $key))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $moderate, $secret))
+    expect(Symmetric\Password\verify($password, $moderate, $key))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $sensitive, $secret))
+    expect(Symmetric\Password\verify($password, $sensitive, $key))
       ->toBeTrue();
     expect(
-      () ==> Symmetric\Password\verify($password, $interactive, $otherSecret),
+      () ==> Symmetric\Password\verify($password, $interactive, $otherKey),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
-    expect(() ==> Symmetric\Password\verify($password, $moderate, $otherSecret))
+    expect(() ==> Symmetric\Password\verify($password, $moderate, $otherKey))
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(
-      () ==> Symmetric\Password\verify($password, $sensitive, $otherSecret),
+      () ==> Symmetric\Password\verify($password, $sensitive, $otherKey),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
 
     $newInteractive = Symmetric\Password\rotate(
       $interactive,
-      $secret,
-      $otherSecret,
+      $key,
+      $otherKey,
     );
-    $newModerate = Symmetric\Password\rotate($moderate, $secret, $otherSecret);
+    $newModerate = Symmetric\Password\rotate($moderate, $key, $otherKey);
     $newSensitive = Symmetric\Password\rotate(
       $sensitive,
-      $secret,
-      $otherSecret,
+      $key,
+      $otherKey,
     );
 
     expect(
-      () ==> Symmetric\Password\verify($password, $newInteractive, $secret),
+      () ==> Symmetric\Password\verify($password, $newInteractive, $key),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
-    expect(() ==> Symmetric\Password\verify($password, $newModerate, $secret))
+    expect(() ==> Symmetric\Password\verify($password, $newModerate, $key))
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
-    expect(() ==> Symmetric\Password\verify($password, $newSensitive, $secret))
+    expect(() ==> Symmetric\Password\verify($password, $newSensitive, $key))
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
-    expect(Symmetric\Password\verify($password, $newInteractive, $otherSecret))
+    expect(Symmetric\Password\verify($password, $newInteractive, $otherKey))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $newModerate, $otherSecret))
+    expect(Symmetric\Password\verify($password, $newModerate, $otherKey))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $newSensitive, $otherSecret))
+    expect(Symmetric\Password\verify($password, $newSensitive, $otherKey))
       ->toBeTrue();
   }
 
   <<HackTest\DataProvider('provideRandomPasswords')>>
   public function testRandom(Crypto\HiddenString $password): void {
-    $secret = Symmetric\Encryption\Secret::generate();
-    $otherSecret = Symmetric\Encryption\Secret::generate();
+    $key = Symmetric\Encryption\Key::generate();
+    $otherKey = Symmetric\Encryption\Key::generate();
 
     $interactive = Symmetric\Password\hash(
       $password,
-      $secret,
+      $key,
       Crypto\SecurityLevel::INTERACTIVE,
     );
     $moderate = Symmetric\Password\hash(
       $password,
-      $secret,
+      $key,
       Crypto\SecurityLevel::MODERATE,
     );
     $sensitive = Symmetric\Password\hash(
       $password,
-      $secret,
+      $key,
       Crypto\SecurityLevel::SENSITIVE,
     );
 
-    expect(Symmetric\Password\verify($password, $interactive, $secret))
+    expect(Symmetric\Password\verify($password, $interactive, $key))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $moderate, $secret))
+    expect(Symmetric\Password\verify($password, $moderate, $key))
       ->toBeTrue();
-    expect(Symmetric\Password\verify($password, $sensitive, $secret))
+    expect(Symmetric\Password\verify($password, $sensitive, $key))
       ->toBeTrue();
     expect(
-      () ==> Symmetric\Password\verify($password, $interactive, $otherSecret),
+      () ==> Symmetric\Password\verify($password, $interactive, $otherKey),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
-    expect(() ==> Symmetric\Password\verify($password, $moderate, $otherSecret))
+    expect(() ==> Symmetric\Password\verify($password, $moderate, $otherKey))
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(
-      () ==> Symmetric\Password\verify($password, $sensitive, $otherSecret),
+      () ==> Symmetric\Password\verify($password, $sensitive, $otherKey),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
 
     expect(Symmetric\Password\stale(
       $interactive,
-      $secret,
+      $key,
       Crypto\SecurityLevel::INTERACTIVE,
     ))->toBeFalse();
     expect(Symmetric\Password\stale(
       $interactive,
-      $secret,
+      $key,
       Crypto\SecurityLevel::MODERATE,
     ))->toBeTrue();
     expect(Symmetric\Password\stale(
       $interactive,
-      $secret,
+      $key,
       Crypto\SecurityLevel::SENSITIVE,
     ))->toBeTrue();
     expect(
       () ==> Symmetric\Password\stale(
         $interactive,
-        $otherSecret,
+        $otherKey,
         Crypto\SecurityLevel::MODERATE,
       ),
     )->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(
       () ==> Symmetric\Password\stale(
         $interactive,
-        $otherSecret,
+        $otherKey,
         Crypto\SecurityLevel::SENSITIVE,
       ),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\stale(
       $moderate,
-      $secret,
+      $key,
       Crypto\SecurityLevel::INTERACTIVE,
     ))->toBeTrue();
     expect(
       () ==> Symmetric\Password\stale(
         $moderate,
-        $otherSecret,
+        $otherKey,
         Crypto\SecurityLevel::INTERACTIVE,
       ),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\stale(
       $moderate,
-      $secret,
+      $key,
       Crypto\SecurityLevel::MODERATE,
     ))->toBeFalse();
     expect(Symmetric\Password\stale(
       $moderate,
-      $secret,
+      $key,
       Crypto\SecurityLevel::SENSITIVE,
     ))->toBeTrue();
     expect(
       () ==> Symmetric\Password\stale(
         $moderate,
-        $otherSecret,
+        $otherKey,
         Crypto\SecurityLevel::SENSITIVE,
       ),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\stale(
       $sensitive,
-      $secret,
+      $key,
       Crypto\SecurityLevel::INTERACTIVE,
     ))->toBeTrue();
     expect(Symmetric\Password\stale(
       $sensitive,
-      $secret,
+      $key,
       Crypto\SecurityLevel::MODERATE,
     ))->toBeTrue();
     expect(
       () ==> Symmetric\Password\stale(
         $sensitive,
-        $otherSecret,
+        $otherKey,
         Crypto\SecurityLevel::INTERACTIVE,
       ),
     )
@@ -198,14 +198,14 @@ class PasswordTest extends HackTest\HackTest {
     expect(
       () ==> Symmetric\Password\stale(
         $sensitive,
-        $otherSecret,
+        $otherKey,
         Crypto\SecurityLevel::MODERATE,
       ),
     )
       ->toThrow(Crypto\Exception\InvalidMessageException::class);
     expect(Symmetric\Password\stale(
       $sensitive,
-      $secret,
+      $key,
       Crypto\SecurityLevel::SENSITIVE,
     ))->toBeFalse();
   }
@@ -220,11 +220,11 @@ class PasswordTest extends HackTest\HackTest {
     return $passwords;
   }
 
-  private async function import<reify T as Symmetric\Secret>(
+  private async function import<reify T as Symmetric\Key>(
     string $name,
   ): Awaitable<T> {
     await using (
-      $file = File\open_read_only(__DIR__.'/../../../secrets/'.$name.'.key')
+      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
     ) {
       return T::import(new Crypto\HiddenString(await $file->readAsync()));
     }

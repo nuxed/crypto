@@ -13,9 +13,8 @@ namespace Nuxed\Crypto\Symmetric\Password;
 
 function stale(
   string $stored,
-  \Nuxed\Crypto\Symmetric\Encryption\Secret $secret,
+  \Nuxed\Crypto\Symmetric\Encryption\Key $key,
   \Nuxed\Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE,
-  string $additionalData = '',
 ): bool;
 ```
 
@@ -28,9 +27,8 @@ function stale(
 
 
 + ` string $stored `
-+ [` \Nuxed\Crypto\Symmetric\Encryption\Secret `](<class.Nuxed.Crypto.Symmetric.Encryption.Secret.md>)`` $secret ``
++ [` \Nuxed\Crypto\Symmetric\Encryption\Key `](<class.Nuxed.Crypto.Symmetric.Encryption.Key.md>)`` $key ``
 + ` \Nuxed\Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE `
-+ ` string $additionalData = '' `
 
 
 

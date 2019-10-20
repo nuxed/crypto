@@ -9,11 +9,11 @@ use namespace Nuxed\Crypto\Asymmetric\Encryption;
  */
 function unlock(
   string $ciphertext,
-  Secret\SignaturePublicSecret $senderPublicKey,
-  Encryption\Secret\PrivateSecret $encSecret,
+  Key\SignaturePublicKey $senderPublicKey,
+  Encryption\Key\PrivateKey $encKey,
 ): Crypto\HiddenString {
-  $senderEncKey = $senderPublicKey->toEncryptionSecret();
-  $decrypted = Encryption\decrypt($ciphertext, $encSecret, $senderEncKey);
+  $senderEncKey = $senderPublicKey->toEncryptionKey();
+  $decrypted = Encryption\decrypt($ciphertext, $encKey, $senderEncKey);
   $signature = Binary\slice(
     $decrypted->toString(),
     0,

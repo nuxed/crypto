@@ -3,7 +3,7 @@
 
 
 
-Decrypt a message using the Halite encryption protocol
+Decrypt a message
 
 
 
@@ -13,7 +13,7 @@ namespace Nuxed\Crypto\Symmetric\Encryption;
 
 function decrypt(
   string $ciphertext,
-  Secret $secretKey,
+  Key $key,
   string $additionalData = '',
 ): \Nuxed\Crypto\HiddenString;
 ```
@@ -27,7 +27,7 @@ function decrypt(
 
 
 + ` string $ciphertext `
-+ ` Secret $secretKey `
++ ` Key $key `
 + ` string $additionalData = '' `
 
 

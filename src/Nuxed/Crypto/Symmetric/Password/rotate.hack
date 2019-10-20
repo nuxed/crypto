@@ -7,11 +7,8 @@ use namespace Nuxed\Crypto\Symmetric\Encryption;
  */
 function rotate(
   string $stored,
-  Encryption\Secret $oldSecret,
-  Encryption\Secret $newSecret,
+  Encryption\Key $oldKey,
+  Encryption\Key $newKey,
 ): string {
-  return Encryption\encrypt(
-    Encryption\decrypt($stored, $oldSecret),
-    $newSecret,
-  );
+  return Encryption\encrypt(Encryption\decrypt($stored, $oldKey), $newKey);
 }

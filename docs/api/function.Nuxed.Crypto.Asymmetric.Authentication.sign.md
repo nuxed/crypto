@@ -13,7 +13,7 @@ namespace Nuxed\Crypto\Asymmetric\Authentication;
 
 function sign(
   string $message,
-  Secret\SignaturePrivateSecret $secret,
+  Key\SignaturePrivateKey $key,
 ): string;
 ```
 
@@ -26,7 +26,7 @@ function sign(
 
 
 + ` string $message `
-+ ` Secret\SignaturePrivateSecret $secret `
++ ` Key\SignaturePrivateKey $key `
 
 
 

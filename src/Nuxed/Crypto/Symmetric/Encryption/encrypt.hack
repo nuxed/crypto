@@ -12,7 +12,7 @@ use namespace Nuxed\Crypto\Symmetric\Authentication;
  */
 function encrypt(
   Crypto\HiddenString $plaintext,
-  Secret $secret,
+  Key $key,
   string $additionalData = '',
 ): string {
   // Generate a nonce and HKDF salt:
@@ -23,7 +23,7 @@ function encrypt(
   // likely cross-protocol attacks.
   // This uses salted HKDF to split the keys, which is why we need the
   // salt in the first place.
-  list($encKey, $authKey) = Secret\split($secret, $salt);
+  list($encKey, $authKey) = Key\split($key, $salt);
   // Encrypt our message with the encryption key:
   $encrypted = \sodium_crypto_stream_xor(
     $plaintext->toString(),
@@ -34,7 +34,7 @@ function encrypt(
   // Calculate an authentication tag:
   $auth = Authentication\authenticate(
     $salt.$nonce.$additionalData.$encrypted,
-    new Authentication\SignatureSecret(new Crypto\HiddenString($authKey)),
+    new Authentication\SignatureKey(new Crypto\HiddenString($authKey)),
   );
   // wipe authentication key from memory
   \sodium_memzero(inout $authKey);

@@ -8,7 +8,7 @@ namespace Nuxed\Crypto\Symmetric\Authentication;
 
 function authenticate(
   string $message,
-  Secret $secret,
+  SignatureKey $key,
 ): string;
 ```
 
@@ -21,7 +21,7 @@ function authenticate(
 
 
 + ` string $message `
-+ ` Secret $secret `
++ ` SignatureKey $key `
 
 
 

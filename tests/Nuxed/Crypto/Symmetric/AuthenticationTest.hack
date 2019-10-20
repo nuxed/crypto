@@ -10,20 +10,20 @@ use function Facebook\FBExpect\expect;
 
 class AuthenticationTest extends HackTest\HackTest {
   public async function testAuthenticateAndVerify(): Awaitable<void> {
-    $secret = await $this->import<Symmetric\Authentication\SignatureSecret>(
+    $key = await $this->import<Symmetric\Authentication\SignatureKey>(
       'symmetric.authentication',
     );
 
-    $mac = Symmetric\Authentication\authenticate('Hello, World!', $secret);
+    $mac = Symmetric\Authentication\authenticate('Hello, World!', $key);
 
     expect(Str\length($mac))->toBeSame(\SODIUM_CRYPTO_GENERICHASH_BYTES_MAX);
     expect(Crypto\Hex\encode($mac))
       ->toBeSame(
         '1c7f53d7df6dc916d72ac924cf7cb37efa7c236c05d6a3b2257806dd24aeba88c38ebad236b2ee4005866ffeabe67a75845f4da8309cf9ca8e9602c446e48b9b',
       );
-    expect(Symmetric\Authentication\verify('Hello, World!', $secret, $mac))
+    expect(Symmetric\Authentication\verify('Hello, World!', $key, $mac))
       ->toBeTrue();
-    expect(Symmetric\Authentication\verify('Hello, World', $secret, $mac))
+    expect(Symmetric\Authentication\verify('Hello, World', $key, $mac))
       ->toBeFalse();
   }
 
@@ -31,14 +31,14 @@ class AuthenticationTest extends HackTest\HackTest {
   public async function testAuthenticateAndVerifyRandom(
     string $data,
   ): Awaitable<void> {
-    $secret = Symmetric\Authentication\SignatureSecret::generate();
+    $key = Symmetric\Authentication\SignatureKey::generate();
 
-    $mac = Symmetric\Authentication\authenticate($data, $secret);
+    $mac = Symmetric\Authentication\authenticate($data, $key);
 
     expect(Str\length($mac))->toBeSame(\SODIUM_CRYPTO_GENERICHASH_BYTES_MAX);
-    expect(Symmetric\Authentication\verify($data, $secret, $mac))
+    expect(Symmetric\Authentication\verify($data, $key, $mac))
       ->toBeTrue();
-    expect(Symmetric\Authentication\verify(Str\slice($data, 1), $secret, $mac))
+    expect(Symmetric\Authentication\verify(Str\slice($data, 1), $key, $mac))
       ->toBeFalse();
   }
 
@@ -51,11 +51,11 @@ class AuthenticationTest extends HackTest\HackTest {
     return $ret;
   }
 
-  private async function import<reify T as Symmetric\Secret>(
+  private async function import<reify T as Symmetric\Key>(
     string $name,
   ): Awaitable<T> {
     await using (
-      $file = File\open_read_only(__DIR__.'/../../../secrets/'.$name.'.key')
+      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
     ) {
       return T::import(new Crypto\HiddenString(await $file->readAsync()));
     }

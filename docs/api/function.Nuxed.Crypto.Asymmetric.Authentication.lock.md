@@ -8,8 +8,8 @@ namespace Nuxed\Crypto\Asymmetric\Authentication;
 
 function lock(
   \Nuxed\Crypto\HiddenString $message,
-  Secret\SignaturePrivateSecret $secret,
-  \Nuxed\Crypto\Asymmetric\Encryption\Secret\PublicSecret $recipientPublicKey,
+  Key\SignaturePrivateKey $key,
+  \Nuxed\Crypto\Asymmetric\Encryption\Key\PublicKey $recipientPublicKey,
 ): string;
 ```
 
@@ -22,8 +22,8 @@ function lock(
 
 
 + [` \Nuxed\Crypto\HiddenString `](<class.Nuxed.Crypto.HiddenString.md>)`` $message ``
-+ ` Secret\SignaturePrivateSecret $secret `
-+ [` \Nuxed\Crypto\Asymmetric\Encryption\Secret\PublicSecret `](<class.Nuxed.Crypto.Asymmetric.Encryption.Secret.PublicSecret.md>)`` $recipientPublicKey ``
++ ` Key\SignaturePrivateKey $key `
++ [` \Nuxed\Crypto\Asymmetric\Encryption\Key\PublicKey `](<class.Nuxed.Crypto.Asymmetric.Encryption.Key.PublicKey.md>)`` $recipientPublicKey ``
 
 
 

@@ -37,12 +37,12 @@ use namespace Nuxed\Crypto\Symmetric;
 use namespace HH\Lib\Experimental\File;
 
 async function main(): void {
-  // generate a secret :
-  $secret = Symmetric\Encryption\Secret::generate();
+  // generate a key :
+  $key = Symmetric\Encryption\Key::generate();
   
-  // or load a stored encryption secret :
+  // or load a stored encryption key :
   await using ($file = File\open_read_only('/path/to/encryption.key')) {
-    $secret = Symmetric\Encryption\Secret::import(
+    $key = Symmetric\Encryption\Key::import(
       new Crypto\HiddenString(
         await $file->readAsync()
       )
@@ -50,8 +50,8 @@ async function main(): void {
   }
 
   $message = new Crypto\HiddenString('Hello, World!');
-  $ciphertext = Symmetric\Encryption\encrypt($message, $secret);
-  $plaintext = Symmetric\Encryption\decrypt($ciphertext, $secret);
+  $ciphertext = Symmetric\Encryption\encrypt($message, $key);
+  $plaintext = Symmetric\Encryption\decrypt($ciphertext, $key);
 
   print $plaintext->toString(); // Hello, World!
 }

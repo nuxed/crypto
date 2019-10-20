@@ -3,7 +3,7 @@
 
 
 
-Encrypt a message using the Halite encryption protocol
+Encrypt a message
 
 
 
@@ -13,7 +13,7 @@ namespace Nuxed\Crypto\Symmetric\Encryption;
 
 function encrypt(
   \Nuxed\Crypto\HiddenString $plaintext,
-  Secret $secret,
+  Key $key,
   string $additionalData = '',
 ): string;
 ```
@@ -33,7 +33,7 @@ You don't need to worry about chosen-ciphertext attacks.
 
 
 + [` \Nuxed\Crypto\HiddenString `](<class.Nuxed.Crypto.HiddenString.md>)`` $plaintext ``
-+ ` Secret $secret `
++ ` Key $key `
 + ` string $additionalData = '' `
 
 

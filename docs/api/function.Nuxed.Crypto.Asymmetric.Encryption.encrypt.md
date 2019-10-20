@@ -14,8 +14,8 @@ namespace Nuxed\Crypto\Asymmetric\Encryption;
 
 function encrypt(
   \Nuxed\Crypto\HiddenString $plaintext,
-  Secret\PrivateSecret $privateSecret,
-  Secret\PublicSecret $publicSecret,
+  Key\PrivateKey $privateKey,
+  Key\PublicKey $publicKey,
   string $additionalData = '',
 ): string;
 ```
@@ -29,8 +29,8 @@ function encrypt(
 
 
 + [` \Nuxed\Crypto\HiddenString `](<class.Nuxed.Crypto.HiddenString.md>)`` $plaintext ``
-+ ` Secret\PrivateSecret $privateSecret `
-+ ` Secret\PublicSecret $publicSecret `
++ ` Key\PrivateKey $privateKey `
++ ` Key\PublicKey $publicKey `
 + ` string $additionalData = '' `
 
 

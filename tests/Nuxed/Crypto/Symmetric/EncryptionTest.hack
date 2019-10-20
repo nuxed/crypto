@@ -10,18 +10,18 @@ use function Facebook\FBExpect\expect;
 
 class EncryptionTest extends HackTest\HackTest {
   public async function testEncryptAndDecrypt(): Awaitable<void> {
-    $secret = await $this->import<Symmetric\Encryption\Secret>(
+    $key = await $this->import<Symmetric\Encryption\Key>(
       'symmetric.encryption',
     );
 
     $message = new Crypto\HiddenString('Hello, World!');
-    $ciphertext = Symmetric\Encryption\encrypt($message, $secret);
+    $ciphertext = Symmetric\Encryption\encrypt($message, $key);
 
     expect(Crypto\Binary\length($ciphertext))->toBeGreaterThan(
       \SODIUM_CRYPTO_GENERICHASH_BYTES,
     );
 
-    $plaintext = Symmetric\Encryption\decrypt($ciphertext, $secret);
+    $plaintext = Symmetric\Encryption\decrypt($ciphertext, $key);
 
     expect($plaintext->toString())->toBeSame($message->toString());
   }
@@ -30,16 +30,16 @@ class EncryptionTest extends HackTest\HackTest {
   public async function testEncryptAndDecryptRandom(
     string $data
   ): Awaitable<void> {
-    $secret = Symmetric\Encryption\Secret::generate();
+    $key = Symmetric\Encryption\Key::generate();
 
     $message = new Crypto\HiddenString($data);
-    $ciphertext = Symmetric\Encryption\encrypt($message, $secret);
+    $ciphertext = Symmetric\Encryption\encrypt($message, $key);
 
     expect(Crypto\Binary\length($ciphertext))->toBeGreaterThan(
       \SODIUM_CRYPTO_GENERICHASH_BYTES,
     );
 
-    $plaintext = Symmetric\Encryption\decrypt($ciphertext, $secret);
+    $plaintext = Symmetric\Encryption\decrypt($ciphertext, $key);
 
     expect($plaintext->toString())->toBeSame($message->toString());
   }
@@ -53,11 +53,11 @@ class EncryptionTest extends HackTest\HackTest {
     return $ret;
   }
 
-  private async function import<reify T as Symmetric\Secret>(
+  private async function import<reify T as Symmetric\Key>(
     string $name,
   ): Awaitable<T> {
     await using (
-      $file = File\open_read_only(__DIR__.'/../../../secrets/'.$name.'.key')
+      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
     ) {
       return T::import(new Crypto\HiddenString(await $file->readAsync()));
     }

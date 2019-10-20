@@ -9,9 +9,9 @@ use namespace Nuxed\Crypto\Symmetric\Encryption;
 function verify(
   Crypto\HiddenString $password,
   string $stored,
-  Encryption\Secret $secret,
+  Encryption\Key $key,
 ): bool {
-  $stored = Encryption\decrypt($stored, $secret);
+  $stored = Encryption\decrypt($stored, $key);
   return \sodium_crypto_pwhash_str_verify(
     $stored->toString(),
     $password->toString(),

@@ -13,8 +13,8 @@ namespace Nuxed\Crypto\Asymmetric\Authentication;
 
 function unlock(
   string $ciphertext,
-  Secret\SignaturePrivateSecret $secret,
-  \Nuxed\Crypto\Asymmetric\Encryption\Secret\PrivateSecret $encSecret,
+  Key\SignaturePublicKey $senderPublicKey,
+  \Nuxed\Crypto\Asymmetric\Encryption\Key\PrivateKey $encKey,
 ): \Nuxed\Crypto\HiddenString;
 ```
 
@@ -27,8 +27,8 @@ function unlock(
 
 
 + ` string $ciphertext `
-+ ` Secret\SignaturePrivateSecret $secret `
-+ [` \Nuxed\Crypto\Asymmetric\Encryption\Secret\PrivateSecret `](<class.Nuxed.Crypto.Asymmetric.Encryption.Secret.PrivateSecret.md>)`` $encSecret ``
++ ` Key\SignaturePublicKey $senderPublicKey `
++ [` \Nuxed\Crypto\Asymmetric\Encryption\Key\PrivateKey `](<class.Nuxed.Crypto.Asymmetric.Encryption.Key.PrivateKey.md>)`` $encKey ``
 
 
 

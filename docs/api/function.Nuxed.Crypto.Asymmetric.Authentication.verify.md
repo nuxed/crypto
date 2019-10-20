@@ -13,7 +13,7 @@ namespace Nuxed\Crypto\Asymmetric\Authentication;
 
 function verify(
   string $message,
-  Secret\SignaturePublicSecret $secret,
+  Key\SignaturePublicKey $key,
   string $signature,
 ): bool;
 ```
@@ -27,7 +27,7 @@ function verify(
 
 
 + ` string $message `
-+ ` Secret\SignaturePublicSecret $secret `
++ ` Key\SignaturePublicKey $key `
 + ` string $signature `
 
 

@@ -9,9 +9,9 @@ use namespace Nuxed\Crypto\Symmetric\Encryption;
  */
 function stale(
   string $stored,
-  Encryption\Secret $secret,
+  Encryption\Key $key,
   Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE,
 ): bool {
-  $stored = Encryption\decrypt($stored, $secret);
+  $stored = Encryption\decrypt($stored, $key);
   return Password\stale($stored->toString(), $level);
 }

@@ -13,9 +13,8 @@ namespace Nuxed\Crypto\Symmetric\Password;
 
 function hash(
   \Nuxed\Crypto\HiddenString $password,
-  \Nuxed\Crypto\Symmetric\Encryption\Secret $secret,
+  \Nuxed\Crypto\Symmetric\Encryption\Key $key,
   \Nuxed\Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE,
-  string $additionalData = '',
 ): string;
 ```
 
@@ -28,9 +27,8 @@ function hash(
 
 
 + [` \Nuxed\Crypto\HiddenString `](<class.Nuxed.Crypto.HiddenString.md>)`` $password ``
-+ [` \Nuxed\Crypto\Symmetric\Encryption\Secret `](<class.Nuxed.Crypto.Symmetric.Encryption.Secret.md>)`` $secret ``
++ [` \Nuxed\Crypto\Symmetric\Encryption\Key `](<class.Nuxed.Crypto.Symmetric.Encryption.Key.md>)`` $key ``
 + ` \Nuxed\Crypto\SecurityLevel $level = Crypto\SecurityLevel::INTERACTIVE `
-+ ` string $additionalData = '' `
 
 
 

@@ -1,7 +1,7 @@
 namespace Nuxed\Crypto\Exception;
 
 <<__Sealed(
-  InvalidSecretException::class,
+  InvalidKeyException::class,
   InvalidSignatureException::class,
   InvalidMessageException::class,
 )>>
