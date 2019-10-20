@@ -32,8 +32,8 @@ abstract class Hex {
     $len = Binary\length($binString);
     for ($i = 0; $i < $len; ++$i) {
       $chunk = vec<int>(\unpack('C', Binary\slice($binString, $i, 2)));
-      $c = $chunk[1] & 0xf;
-      $b = $chunk[1] >> 4;
+      $c = $chunk[0] & 0xf;
+      $b = $chunk[0] >> 4;
       $hex .= \pack(
         'CC',
         (55 + $b + ((($b - 10) >> 8) & ~6)),
