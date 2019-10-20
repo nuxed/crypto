@@ -27,7 +27,8 @@
     "scripts": {
         "check": [
             "@type-check",
-            "@lint"
+            "@lint",
+            "@test"
         ],
         "lint": "hhast-lint -v src/",
         "test": "hacktest tests/",
