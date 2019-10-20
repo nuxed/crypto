@@ -17,7 +17,7 @@ class EncryptionTest extends HackTest\HackTest {
     $message = new Crypto\HiddenString('Hello, World!');
     $ciphertext = Symmetric\Encryption\encrypt($message, $secret);
 
-    expect(Crypto\Binary\length($ciphertext))->toBeSame(
+    expect(Crypto\Binary\length($ciphertext))->toBeGreaterThan(
       \SODIUM_CRYPTO_GENERICHASH_BYTES,
     );
 
@@ -35,7 +35,7 @@ class EncryptionTest extends HackTest\HackTest {
     $message = new Crypto\HiddenString($data);
     $ciphertext = Symmetric\Encryption\encrypt($message, $secret);
 
-    expect(Crypto\Binary\length($ciphertext))->toBeSame(
+    expect(Crypto\Binary\length($ciphertext))->toBeGreaterThan(
       \SODIUM_CRYPTO_GENERICHASH_BYTES,
     );
 
