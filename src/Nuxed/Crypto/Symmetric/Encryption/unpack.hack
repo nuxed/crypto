@@ -8,16 +8,16 @@ use namespace Nuxed\Crypto\{Binary, Exception};
 function unpack(string $ciphertext): (string, string, string, string) {
   $length = Binary\length($ciphertext);
   // Fail fast on invalid messages
-  if ($length < 32) {
+  if ($length < \SODIUM_CRYPTO_GENERICHASH_BYTES) {
     throw new Exception\InvalidMessageException('Message is too short');
   }
   // The salt is used for key splitting (via HKDF)
-  $salt = Binary\slice($ciphertext, 0, 32);
+  $salt = Binary\slice($ciphertext, 0, \SODIUM_CRYPTO_GENERICHASH_BYTES);
   // This is the nonce (we authenticated it):
   $nonce = Binary\slice(
     $ciphertext,
     // 32:
-    32,
+    \SODIUM_CRYPTO_GENERICHASH_BYTES,
     // 24:
     \SODIUM_CRYPTO_STREAM_NONCEBYTES,
   );
@@ -25,11 +25,11 @@ function unpack(string $ciphertext): (string, string, string, string) {
   $encrypted = Binary\slice(
     $ciphertext,
     // 56:
-    32 + \SODIUM_CRYPTO_STREAM_NONCEBYTES,
+    \SODIUM_CRYPTO_GENERICHASH_BYTES + \SODIUM_CRYPTO_STREAM_NONCEBYTES,
     // $length - 120
     $length -
       (
-        32 + // 32
+        \SODIUM_CRYPTO_GENERICHASH_BYTES + // 32
         \SODIUM_CRYPTO_STREAM_NONCEBYTES + // 56
         \SODIUM_CRYPTO_GENERICHASH_BYTES_MAX // 120
       ),
