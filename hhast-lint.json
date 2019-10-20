@@ -1,0 +1,6 @@
+{
+  "roots": [ "src/Nuxed/Crypto/" ],
+  "builtinLinters": "all",
+  "disableAllAutoFixes": false,
+  "overrides": []
+}

@@ -1,0 +1,8 @@
+{
+    "roots": [
+        "src/Nuxed/Crypto"
+    ],
+    "devRoots": [
+    ],
+    "devFailureHandler": "Facebook\\AutoloadMap\\HHClientFallbackHandler"
+}

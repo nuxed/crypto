@@ -1,0 +1,35 @@
+{
+    "name": "nuxed/crypto",
+    "type": "library",
+    "description": "Nuxed Cryptography library",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "azjezz",
+            "email": "azjezz@protonmail.com"
+        },
+        {
+            "name": "Nuxed Community",
+            "homepage": "https://github.com/nuxed/crypto/graphs/contributors"
+        }
+    ],
+    "require": {
+        "hhvm": "^4.25",
+        "hhvm/hsl": "^4.25"
+    },
+    "require-dev": {
+        "facebook/fbexpect": "^2.6",
+        "hhvm/hacktest": "^1.6"
+    },
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "scripts": {
+        "check": [
+            "@type-check",
+            "@lint"
+        ],
+        "lint": "hhast-lint -v src/",
+        "test": "hacktest tests/",
+        "type-check": "hh_client src/"
+    }
+}
