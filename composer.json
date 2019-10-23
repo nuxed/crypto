@@ -29,7 +29,7 @@
             "@test"
         ],
         "lint": "hhast-lint -v src/",
-        "test": "hacktest test/",
+        "test": "hacktest tests/",
         "type-check": "hh_client src/"
     }
 }
