@@ -18,7 +18,7 @@
         "hhvm/hsl": "^4.25"
     },
     "require-dev": {
-        "facebook/fbexpect": "^2.6",
+        "facebook/fbexpect": "^2.7",
         "hhvm/hacktest": "^1.6",
         "hhvm/hhast": "^4.25"
     },
