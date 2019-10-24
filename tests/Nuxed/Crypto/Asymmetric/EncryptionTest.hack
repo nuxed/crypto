@@ -259,7 +259,7 @@ class EncryptionTest extends HackTest\HackTest {
     $r = SecureRandom\int(0, Crypto\Binary\length($sealed) - 1);
     $amt = SecureRandom\int(0, 7);
     $sealed[$r] = Crypto\Str\chr(
-      Crypto\Str\ord($sealed[$r]) ^ $amt,
+      Crypto\Str\ord($sealed[$r]) ^ 1 << $amt,
     );
 
     try {
