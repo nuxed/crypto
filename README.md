@@ -8,10 +8,10 @@
 </p>
 
 # Nuxed Crypto
- 
-## High Level Cryptoghraphy interface built in top of libsodium
 
-Nuxed Crypto a high-level cryptography interface that relies on libsodium for all of its underlying cryptography operations, inspired by [`Halite`](https://github.com/paragonie/halite).
+The Nuxed Crypto component provides a high-level cryptography interface that relies on libsodium for all of its underlying cryptography operations.
+
+inspired by [`Halite`](https://github.com/paragonie/halite).
 
 ### Important
 
@@ -24,10 +24,6 @@ This package can be installed with [Composer](https://getcomposer.org).
 ```console
 $ composer require nuxed/crypto
 ```
-
-### Documentation
-
-Documentation for Nuxed Crypto can be found in this repository under the [docs](docs/README.md) folder.
 
 ### Example
 
@@ -62,10 +58,10 @@ async function main(): void {
 
 ### Security
 
-For information on reporting security vulnerabilities in Nuxed Crypto, see [SECURITY.md](SECURITY.md).
+For information on reporting security vulnerabilities in Nuxed, see [SECURITY.md](SECURITY.md).
 
 ---
 
 ### License
 
-The Nuxed Crypto library is open-sourced software licensed under the MIT-licensed.
+Nuxed is open-sourced software licensed under the MIT-licensed.

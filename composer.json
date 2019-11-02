@@ -1,7 +1,7 @@
 {
     "name": "nuxed/crypto",
     "type": "library",
-    "description": "Nuxed Crypto - High Level Cryptoghraphy interface built in top of libsodium",
+    "description": "Nuxed Crypto",
     "license": "MIT",
     "authors": [
         {
