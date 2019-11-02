@@ -28,23 +28,19 @@ $ composer require nuxed/crypto
 ### Example
 
 ```hack
-use namespace Nuxed\Crypto;
+use namespace Nuxed\{Crypto, Filesystem};
 use namespace Nuxed\Crypto\Symmetric;
-use namespace HH\Lib\Experimental\File;
 
 <<__EntryPoint>>
-async function main(): void {
+async function main(): Awaitable<void> {
   // generate a key :
   $key = Symmetric\Encryption\Key::generate();
   
   // or load a stored encryption key :
-  await using ($file = File\open_read_only('/path/to/encryption.key')) {
-    $key = Symmetric\Encryption\Key::import(
-      new Crypto\HiddenString(
-        await $file->readAsync()
-      )
-    );
-  }
+  $file = new Filesystem\File('/path/to/encryption.key');
+  $key = $key = Symmetric\Encryption\Key::import(
+    new Crypto\HiddenString(await $file->read())
+  );
 
   $message = new Crypto\HiddenString('Hello, World!');
   $ciphertext = Symmetric\Encryption\encrypt($message, $key);
