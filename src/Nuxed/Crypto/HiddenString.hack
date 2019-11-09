@@ -27,7 +27,7 @@ final class HiddenString {
   /**
    * Hide its internal state from var_dump()
    */
-  public function __debugInfo(): KeyedContainer<string, string> {
+  public function __debugInfo(): dict<string, string> {
     return dict[
       'internalStringValue' => '*',
       'attention' => 'If you need the value of a HiddenString, '.
