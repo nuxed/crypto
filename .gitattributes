@@ -1,6 +1,5 @@
 *.hack linguist-language=Hack
 
 /tests export-ignore
-/docs export-ignore
 .travis.sh export-ignore
 .travis.yml export-ignore

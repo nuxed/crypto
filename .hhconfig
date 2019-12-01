@@ -2,4 +2,7 @@ assume_php=false
 safe_array = true
 safe_vector_array = true
 unsafe_rx = false
+const_default_func_args = true
+disallow_array_literal = true
+disable_lval_as_an_expression = true
 ignored_paths = [ "vendor/.+/tests/.+", "vendor/.+/bin/.+" ]
