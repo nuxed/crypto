@@ -1,7 +1,7 @@
 namespace Nuxed\Test\Crypto\Asymmetric;
 
 use namespace HH\Lib\Str;
-use namespace HH\Lib\Experimental\File;
+use namespace HH\Lib\File;
 use namespace Facebook\HackTest;
 use namespace Nuxed\Crypto;
 use namespace Nuxed\Crypto\Asymmetric;
