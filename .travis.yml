@@ -5,8 +5,7 @@ os:
   - linux
 
 env:
-  - HHVM_VERSION=4.25-latest
-  - HHVM_VERSION=4.30-latest
+  - HHVM_VERSION=4.56-latest
   - HHVM_VERSION=latest
   - HHVM_VERSION=nightly
 
