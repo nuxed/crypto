@@ -18,22 +18,20 @@ class AuthenticationTest extends HackTest\HackTest {
     >('asymmetric.authentication.public');
     $signature = Asymmetric\Authentication\sign('Hello, World!', $key);
 
-    expect(Crypto\Binary\length($signature))->toBeSame(\SODIUM_CRYPTO_SIGN_BYTES);
+    expect(Crypto\Binary\length($signature))->toBeSame(
+      \SODIUM_CRYPTO_SIGN_BYTES,
+    );
     expect(Crypto\Hex\encode($signature))
       ->toBeSame(
         'ded3736f32e6cbd625fc6ec12521194dfad0192556baba67bc151f78707d00369cda8c910531bcfc49ac24ade1797ecb9f88eb53e31738fd174d7b4ee7ac8e07',
       );
-    expect(Asymmetric\Authentication\verify(
-      'Hello, World!',
-      $publicKey,
-      $signature,
-    ))
+    expect(
+      Asymmetric\Authentication\verify('Hello, World!', $publicKey, $signature),
+    )
       ->toBeTrue();
-    expect(Asymmetric\Authentication\verify(
-      'Hello, World',
-      $publicKey,
-      $signature,
-    ))
+    expect(
+      Asymmetric\Authentication\verify('Hello, World', $publicKey, $signature),
+    )
       ->toBeFalse();
   }
 
@@ -102,8 +100,7 @@ class AuthenticationTest extends HackTest\HackTest {
 
   <<HackTest\DataProvider('provideRandomStrings')>>
   public async function testSignAndVerifyRandom(string $data): Awaitable<void> {
-    list($key, $publicKey) =
-      Asymmetric\Authentication\SignatureKey::generate();
+    list($key, $publicKey) = Asymmetric\Authentication\SignatureKey::generate();
 
     $signature = Asymmetric\Authentication\sign($data, $key);
     expect(Crypto\Binary\length($signature))->toBeSame(
@@ -124,8 +121,7 @@ class AuthenticationTest extends HackTest\HackTest {
     list($bobSignatureKey, $bobSignaturePublicKey) =
       Asymmetric\Authentication\SignatureKey::generate();
 
-    list($bobEncKey, $bobEncPublicKey) =
-      Asymmetric\Encryption\Key::generate();
+    list($bobEncKey, $bobEncPublicKey) = Asymmetric\Encryption\Key::generate();
 
     // Actor : alice
     $toBob = Asymmetric\Authentication\lock(
@@ -173,10 +169,9 @@ class AuthenticationTest extends HackTest\HackTest {
   private async function import<reify T as Asymmetric\Key>(
     string $name,
   ): Awaitable<T> {
-    await using (
-      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
-    ) {
-      return T::import(new Crypto\HiddenString(await $file->readAsync()));
-    }
+    $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key');
+    using $file->closeWhenDisposed();
+
+    return T::import(new Crypto\HiddenString(await $file->readAllAsync()));
   }
 }

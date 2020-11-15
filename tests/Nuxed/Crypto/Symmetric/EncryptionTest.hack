@@ -28,7 +28,7 @@ class EncryptionTest extends HackTest\HackTest {
 
   <<HackTest\DataProvider('provideRandomStrings')>>
   public async function testEncryptAndDecryptRandom(
-    string $data
+    string $data,
   ): Awaitable<void> {
     $key = Symmetric\Encryption\Key::generate();
 
@@ -56,10 +56,9 @@ class EncryptionTest extends HackTest\HackTest {
   private async function import<reify T as Symmetric\Key>(
     string $name,
   ): Awaitable<T> {
-    await using (
-      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
-    ) {
-      return T::import(new Crypto\HiddenString(await $file->readAsync()));
-    }
+    $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key');
+    using $file->closeWhenDisposed();
+
+    return T::import(new Crypto\HiddenString(await $file->readAsync()));
   }
 }

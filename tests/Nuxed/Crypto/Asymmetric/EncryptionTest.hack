@@ -212,10 +212,7 @@ class EncryptionTest extends HackTest\HackTest {
 
     // Actor : anonymous
     $message = new Crypto\HiddenString('Hello Alice');
-    $sealed = Asymmetric\Encryption\seal(
-      $message,
-      $aliceEncryptionPublicKey,
-    );
+    $sealed = Asymmetric\Encryption\seal($message, $aliceEncryptionPublicKey);
 
     // Actor : alice
     $unsealed = Asymmetric\Encryption\unseal(
@@ -243,10 +240,7 @@ class EncryptionTest extends HackTest\HackTest {
 
     // Actor : anonymous
     $message = new Crypto\HiddenString('Hello Alice');
-    $sealed = Asymmetric\Encryption\seal(
-      $message,
-      $aliceEncryptionPublicKey,
-    );
+    $sealed = Asymmetric\Encryption\seal($message, $aliceEncryptionPublicKey);
 
     // Actor : alice
     $unsealed = Asymmetric\Encryption\unseal(
@@ -258,18 +252,13 @@ class EncryptionTest extends HackTest\HackTest {
 
     $r = SecureRandom\int(0, Crypto\Binary\length($sealed) - 1);
     $amt = SecureRandom\int(0, 7);
-    $sealed[$r] = Crypto\Str\chr(
-      Crypto\Str\ord($sealed[$r]) ^ 1 << $amt,
-    );
+    $sealed[$r] = Crypto\Str\chr(Crypto\Str\ord($sealed[$r]) ^ 1 << $amt);
 
     try {
-      Asymmetric\Encryption\unseal(
-        $sealed,
-        $aliceEncryptionPrivateKey,
-      );
+      Asymmetric\Encryption\unseal($sealed, $aliceEncryptionPrivateKey);
 
       static::fail('should have thrown InvalidKeyException');
-    } catch(Crypto\Exception\IException $e) {
+    } catch (Crypto\Exception\IException $e) {
       expect($e is Crypto\Exception\InvalidKeyException)
         ->toBeTrue();
       expect($e->getMessage())
@@ -353,10 +342,9 @@ class EncryptionTest extends HackTest\HackTest {
   private async function import<reify T as Asymmetric\Key>(
     string $name,
   ): Awaitable<T> {
-    await using (
-      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
-    ) {
-      return T::import(new Crypto\HiddenString(await $file->readAsync()));
-    }
+    $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key');
+    using $file->closeWhenDisposed();
+
+    return T::import(new Crypto\HiddenString(await $file->readAllAsync()));
   }
 }

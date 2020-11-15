@@ -14,14 +14,18 @@
         }
     ],
     "require": {
-        "hhvm": "^4.56",
-        "hhvm/hsl": "^4.40"
+        "hhvm": "~4.83.1 || ~4.84.0",
+        "hhvm/hsl": "^4.41",
+        "hhvm/hsl-experimental": "^4.66"
     },
     "require-dev": {
-        "facebook/fbexpect": "^2.7",
+        "facebook/difflib": "^1.1.1",
+        "facebook/fbexpect": "^2.7.7",
+        "facebook/hh-clilib": "^2.5.2",
         "hhvm/hacktest": "^2.0",
-        "hhvm/hhast": "^4.25",
-        "hhvm/hsl-experimental": "^4.50"
+        "hhvm/hhast": "^4.82.2",
+        "hhvm/hhvm-autoload": "^3.1.6",
+        "hhvm/type-assert": "^4.1.2"
     },
     "scripts": {
         "check": [

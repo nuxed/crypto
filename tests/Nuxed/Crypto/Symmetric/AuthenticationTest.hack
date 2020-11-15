@@ -54,10 +54,9 @@ class AuthenticationTest extends HackTest\HackTest {
   private async function import<reify T as Symmetric\Key>(
     string $name,
   ): Awaitable<T> {
-    await using (
-      $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key')
-    ) {
-      return T::import(new Crypto\HiddenString(await $file->readAsync()));
-    }
+    $file = File\open_read_only(__DIR__.'/../../../keys/'.$name.'.key');
+    using $file->closeWhenDisposed();
+
+    return T::import(new Crypto\HiddenString(await $file->readAsync()));
   }
 }
