@@ -1,0 +1,96 @@
+name: "coding standards"
+
+on: ["pull_request", "push"]
+
+jobs:
+  coding-standards:
+    name: "coding standards"
+
+    runs-on: ${{ matrix.os }}
+
+    strategy:
+      matrix:
+        dependencies:
+          - "lowest"
+          - "highest"
+        hhvm:
+          - "4.83"
+          - "latest"
+          - "nightly"
+        os:
+          - "macos-latest"
+          - "ubuntu-latest"
+
+    steps:
+      - name: "checkout"
+        uses: "actions/checkout@v2"
+
+      - name: "installing PHP"
+        uses: "shivammathur/setup-php@v2"
+        with:
+          php-version: "7.4"
+          tools: composer
+
+      - name: "inspecting PHP and Composer versions"
+        run: |
+          php --version
+          composer --version
+
+      - name: "installing HHVM (apt)"
+        if: matrix.os == 'ubuntu-latest'
+        run: |
+          set -ex
+          export DEBIAN_FRONTEND=noninteractive
+          sudo apt-get update
+          sudo apt-get install -y software-properties-common apt-transport-https
+          sudo apt-key add .github/workflows/hhvm.gpg
+          if [ "${{matrix.hhvm}}" = 'nightly' ]; then
+            sudo add-apt-repository https://dl.hhvm.com/ubuntu
+            sudo apt-get install -y hhvm-nightly
+          elif [ "${{matrix.hhvm}}" = 'latest' ]; then
+            sudo add-apt-repository https://dl.hhvm.com/ubuntu
+            sudo apt-get install -y hhvm
+          else
+            DISTRO=$(lsb_release --codename --short)
+            sudo add-apt-repository \
+              "deb https://dl.hhvm.com/ubuntu ${DISTRO}-${{matrix.hhvm}} main"
+            sudo apt-get install -y hhvm
+          fi
+
+      - name: "installing HHVM (brew)"
+        if: matrix.os == 'macos-latest'
+        run: |
+          brew tap hhvm/hhvm
+          if [ "${{matrix.hhvm}}" = 'latest' ]; then
+            brew install hhvm
+          else
+            brew install hhvm-${{matrix.hhvm}}
+          fi
+
+      - name: "inspecting HHVM and Hack versions"
+        run: |
+          hhvm --version
+          hh_client --version
+
+      - name: "caching dependencies"
+        uses: "actions/cache@v2"
+        with:
+          path: |
+            ~/.composer/cache
+            vendor
+          key: "hhvm-${{ matrix.hhvm }}-${{ matrix.os }}"
+          restore-keys: "hhvm-dependencies-${{ matrix.php-version }}-${{ matrix.os }}"
+
+      - name: "installing lowest dependencies"
+        if: ${{ matrix.dependencies == 'lowest' }}
+        run: "composer update --prefer-lowest --no-interaction --no-progress"
+
+      - name: "installing highest dependencies"
+        if: ${{ matrix.dependencies == 'highest' }}
+        run: "composer update --no-interaction --no-progress"
+
+      - name: "dumping autoloader"
+        run: "hhvm vendor/bin/hh-autoload"
+
+      - name: "lint"
+        run: "hhvm vendor/bin/hhast-lint"
