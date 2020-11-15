@@ -1,11 +1,11 @@
 <p align="center"><img src="https://avatars3.githubusercontent.com/u/45311177?s=200&v=4"></p>
 
-<p align="center">
-<a href="https://travis-ci.org/nuxed/crypto"><img src="https://travis-ci.org/nuxed/crypto.svg" alt="Build Status"></a>
-<a href="https://packagist.org/packages/nuxed/crypto"><img src="https://poser.pugx.org/nuxed/crypto/d/total.svg" alt="Total Downloads"></a>
-<a href="https://packagist.org/packages/nuxed/crypto"><img src="https://poser.pugx.org/nuxed/crypto/v/stable.svg" alt="Latest Stable Version"></a>
-<a href="https://packagist.org/packages/nuxed/crypto"><img src="https://poser.pugx.org/nuxed/crypto/license.svg" alt="License"></a>
-</p>
+![Coding standards status](https://github.com/nuxed/crypto/workflows/coding%20standards/badge.svg?branch=develop)
+![Static analysis status](https://github.com/nuxed/crypto/workflows/static%20analysis/badge.svg?branch=develop)
+![Unit tests status](https://github.com/nuxed/crypto/workflows/unit%20tests/badge.svg?branch=develop)
+[![Total Downloads](https://poser.pugx.org/nuxed/crypto/d/total.svg)](https://packagist.org/packages/nuxed/crypto)
+[![Latest Stable Version](https://poser.pugx.org/nuxed/crypto/v/stable.svg)](https://packagist.org/packages/nuxed/crypto)
+[![License](https://poser.pugx.org/nuxed/crypto/license.svg)](https://packagist.org/packages/nuxed/crypto)
 
 # Nuxed Crypto
 
