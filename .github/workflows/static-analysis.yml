@@ -16,6 +16,7 @@ jobs:
           - "locked"
         hhvm:
           - "4.83"
+          - "4.84"
           - "latest"
           - "nightly"
         os:
@@ -72,15 +73,6 @@ jobs:
         run: |
           hhvm --version
           hh_client --version
-
-      - name: "caching dependencies"
-        uses: "actions/cache@v2"
-        with:
-          path: |
-            ~/.composer/cache
-            vendor
-          key: "hhvm-${{ matrix.hhvm }}-${{ matrix.os }}"
-          restore-keys: "hhvm-dependencies-${{ matrix.php-version }}-${{ matrix.os }}"
 
       - name: "installing lowest dependencies"
         if: ${{ matrix.dependencies == 'lowest' }}

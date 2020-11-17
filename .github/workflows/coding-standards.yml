@@ -15,6 +15,7 @@ jobs:
           - "highest"
         hhvm:
           - "4.83"
+          - "4.84"
           - "latest"
           - "nightly"
         os:

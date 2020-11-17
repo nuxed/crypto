@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "1fe42a1ad9e71750ca267a9d52ff7c55",
+    "content-hash": "054ddbf11643b94969f4ca223675dd0f",
     "packages": [
         {
             "name": "hhvm/hsl",
@@ -412,7 +412,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "hhvm": "~4.83.1 || ~4.84.0"
+        "hhvm": "~4.83.1 || ~4.84.0 || ~4.85.0"
     },
     "platform-dev": [],
     "plugin-api-version": "2.0.0"
