@@ -34,6 +34,6 @@ jobs:
           dependency-versions: ${{ matrix.dependencies }}
           composer-options: "${{ matrix.composer-options }}"
 
-      - name: "lint"
+      - name: "checking coding standards"
         continue-on-error: ${{ matrix.experimental }}
         run: "hhvm vendor/bin/hhast-lint"

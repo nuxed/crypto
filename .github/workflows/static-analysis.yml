@@ -34,6 +34,6 @@ jobs:
           dependency-versions: ${{ matrix.dependencies }}
           composer-options: "${{ matrix.composer-options }}"
 
-      - name: "static analysis"
+      - name: "running static analysis"
         continue-on-error: ${{ matrix.experimental }}
         run: "hh_client"
